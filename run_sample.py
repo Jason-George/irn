@@ -22,6 +22,7 @@ if __name__ == '__main__':
 
     # Class Activation Map
     parser.add_argument("--cam_network", default="net.resnet50_cam", type=str)
+    parser.add_argument("--n_labels", default=19, type=int)
     parser.add_argument("--cam_crop_size", default=512, type=int)
     parser.add_argument("--cam_batch_size", default=16, type=int)
     parser.add_argument("--cam_num_epoches", default=5, type=int)
