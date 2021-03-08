@@ -54,7 +54,12 @@ def get_img_path(img_name, voc12_root):
     if not isinstance(img_name, str):
         img_name = decode_int_filename(img_name)
     return os.path.join(voc12_root, IMG_FOLDER_NAME, img_name + '.png)
-
+                        
+def get_img_path_2(img_name, voc12_root,image_folder):
+    if not isinstance(img_name, str):
+        img_name = decode_int_filename(img_name)
+    return os.path.join(voc12_root, image_folder, img_name + '.png)
+                        
 def load_img_name_list(dataset_path):
 
     img_name_list = np.loadtxt(dataset_path, dtype=np.str)
@@ -108,12 +113,14 @@ class GetAffinityLabelFromIndices():
 
 class VOC12ImageDataset(Dataset):
 
-    def __init__(self, img_name_list_path, voc12_root,
+    def __init__(self, img_name_list_path, voc12_root,image_folder,
                  resize_long=None, rescale=None, img_normal=TorchvisionNormalize(), hor_flip=False,
                  crop_size=None, crop_method=None, to_torch=True):
 
         self.img_name_list = load_img_name_list(img_name_list_path)
         self.voc12_root = voc12_root
+        self.image_folder = image_folder
+   
 
         self.resize_long = resize_long
         self.rescale = rescale
@@ -130,7 +137,7 @@ class VOC12ImageDataset(Dataset):
         name_str  = self.img_name_list[idx]
         #ame_str = decode_int_filename(name)
 
-        img = np.asarray(imageio.imread(get_img_path(name_str, self.voc12_root)))
+        img = np.asarray(imageio.imread(get_img_path_2(name_str, self.voc12_root)))
 
         if self.resize_long:
             img = imutils.random_resize_long(img, self.resize_long[0], self.resize_long[1])
@@ -157,7 +164,7 @@ class VOC12ImageDataset(Dataset):
 
 class VOC12ClassificationDataset(VOC12ImageDataset):
 
-    def __init__(self, img_name_list_path, voc12_root,
+    def __init__(self, img_name_list_path, voc12_root, image_folder,
                  resize_long=None, rescale=None, img_normal=TorchvisionNormalize(), hor_flip=False,
                  crop_size=None, crop_method=None):
         super().__init__(img_name_list_path, voc12_root,
@@ -174,7 +181,7 @@ class VOC12ClassificationDataset(VOC12ImageDataset):
 
 class VOC12ClassificationDatasetMSF(VOC12ClassificationDataset):
 
-    def __init__(self, img_name_list_path, voc12_root,
+    def __init__(self, img_name_list_path, voc12_root,image_folder,
                  img_normal=TorchvisionNormalize(),
                  scales=(1.0,)):
         self.scales = scales
@@ -186,7 +193,7 @@ class VOC12ClassificationDatasetMSF(VOC12ClassificationDataset):
         name = self.img_name_list[idx]
         name_str = decode_int_filename(name)
 
-        img = imageio.imread(get_img_path(name_str, self.voc12_root))
+        img = imageio.imread(get_img_path_2(name_str, self.voc12_root))
 
         ms_img_list = []
         for s in self.scales:
