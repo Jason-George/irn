@@ -13,7 +13,7 @@ if __name__ == '__main__':
                         help="Path to VOC 2012 Devkit, must contain ./JPEGImages as subdirectory.")
 
     # Dataset
-    parser.add_argument("--image_folder", default="voc12/Images", type=str)
+    parser.add_argument("--image_folder", default="Images", type=str)
     parser.add_argument("--train_list", default="voc12/train_aug.txt", type=str)
     parser.add_argument("--val_list", default="voc12/val.txt", type=str)
     parser.add_argument("--infer_list", default="voc12/train.txt", type=str,
