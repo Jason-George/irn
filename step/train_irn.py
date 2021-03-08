@@ -86,6 +86,7 @@ def run(args):
 
     infer_dataset = voc12.dataloader.VOC12ImageDataset(args.infer_list,
                                                        voc12_root=args.voc12_root,
+                                                       image_folder=args.image_folder,
                                                        crop_size=args.irn_crop_size,
                                                        crop_method="top_left")
     infer_data_loader = DataLoader(infer_dataset, batch_size=args.irn_batch_size,
