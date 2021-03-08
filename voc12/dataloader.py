@@ -10,12 +10,12 @@ IMG_FOLDER_NAME = "Images"
 ANNOT_FOLDER_NAME = "Annotations"
 IGNORE = 255
 
-CAT_LIST = ['aeroplane', 'bicycle', 'bird', 'boat',
-        'bottle', 'bus', 'car', 'cat', 'chair',
-        'cow', 'diningtable', 'dog', 'horse',
-        'motorbike', 'person', 'pottedplant',
-        'sheep', 'sofa', 'train',
-        'tvmonitor']
+CAT_LIST = ["Nucleoplasm", "Nuclear membrane","Nucleoli","Nucleoli fibrillar center" ,  
+"Nuclear speckles","Nuclear bodies","Endoplasmic reticulum","Golgi apparatus",
+"Intermediate filaments","Actin filaments", "Microtubules","Mitotic spindle",
+"Centrosome","Plasma membrane","Mitochondria","Aggresome","Cytosol",   
+"Vesicles and punctate cytosolic patterns",   
+"Negative"]
 
 N_CAT = len(CAT_LIST)
 
