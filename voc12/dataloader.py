@@ -6,7 +6,7 @@ import os.path
 import imageio
 from misc import imutils
 
-IMG_FOLDER_NAME = "JPEGImages"
+IMG_FOLDER_NAME = "Images"
 ANNOT_FOLDER_NAME = "Annotations"
 IGNORE = 255
 
