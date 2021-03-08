@@ -167,7 +167,7 @@ class VOC12ClassificationDataset(VOC12ImageDataset):
     def __init__(self, img_name_list_path, voc12_root, image_folder,
                  resize_long=None, rescale=None, img_normal=TorchvisionNormalize(), hor_flip=False,
                  crop_size=None, crop_method=None):
-        super().__init__(img_name_list_path, voc12_root,
+        super().__init__(img_name_list_path, voc12_root,image_folder,
                  resize_long, rescale, img_normal, hor_flip,
                  crop_size, crop_method)
         self.label_list = load_image_label_list_from_npy(self.img_name_list)
@@ -186,7 +186,7 @@ class VOC12ClassificationDatasetMSF(VOC12ClassificationDataset):
                  scales=(1.0,)):
         self.scales = scales
 
-        super().__init__(img_name_list_path, voc12_root, img_normal=img_normal)
+        super().__init__(img_name_list_path, voc12_root, image_folder,img_normal=img_normal)
         self.scales = scales
 
     def __getitem__(self, idx):
