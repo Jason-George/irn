@@ -38,7 +38,7 @@ def validate(model, data_loader):
 
 def run(args):
 
-    model = getattr(importlib.import_module(args.cam_network,args.n_labels), 'Net')()
+    model = getattr(importlib.import_module(args.cam_network), 'Net')()
 
 
     train_dataset = voc12.dataloader.VOC12ClassificationDataset(args.train_list, voc12_root=args.voc12_root,image_folder=args.image_folder,
