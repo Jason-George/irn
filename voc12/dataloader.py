@@ -53,11 +53,11 @@ def load_image_label_list_from_npy(img_name_list):
 def get_img_path(img_name, voc12_root):
     if not isinstance(img_name, str):
         img_name = decode_int_filename(img_name)
-    return os.path.join(voc12_root, IMG_FOLDER_NAME, img_name + '.png
+    return os.path.join(voc12_root, IMG_FOLDER_NAME, img_name + '.png)
 
 def load_img_name_list(dataset_path):
 
-    img_name_list = np.loadtxt(dataset_path, dtype=np.int32)
+    img_name_list = np.loadtxt(dataset_path, dtype=np.str)
 
     return img_name_list
 
