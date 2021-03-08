@@ -6,7 +6,7 @@ from net import resnet50
 
 class Net(nn.Module):
 
-    def __init__(self,n_labels):
+    def __init__(self):
         super(Net, self).__init__()
 
         self.resnet50 = resnet50.resnet50(pretrained=True, strides=(2, 2, 2, 1))
@@ -18,7 +18,7 @@ class Net(nn.Module):
         self.stage3 = nn.Sequential(self.resnet50.layer3)
         self.stage4 = nn.Sequential(self.resnet50.layer4)
 
-        self.classifier = nn.Conv2d(2048, self.n_labels, 1, bias=False)
+        self.classifier = nn.Conv2d(2048, 19, 1, bias=False)
 
         self.backbone = nn.ModuleList([self.stage1, self.stage2, self.stage3, self.stage4])
         self.newly_added = nn.ModuleList([self.classifier])
@@ -33,7 +33,7 @@ class Net(nn.Module):
 
         x = torchutils.gap2d(x, keepdims=True)
         x = self.classifier(x)
-        x = x.view(-1, self.n_labels)
+        x = x.view(-1, 19)
 
         return x
 
