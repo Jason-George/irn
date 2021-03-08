@@ -190,8 +190,8 @@ class VOC12ClassificationDatasetMSF(VOC12ClassificationDataset):
         self.scales = scales
 
     def __getitem__(self, idx):
-        name = self.img_name_list[idx]
-        name_str = decode_int_filename(name)
+        name_str = self.img_name_list[idx]
+        #name_str = decode_int_filename(name)
 
         img = imageio.imread(get_img_path_2(name_str, self.voc12_root,self.image_folder))
 
