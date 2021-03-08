@@ -137,7 +137,7 @@ class VOC12ImageDataset(Dataset):
         name_str  = self.img_name_list[idx]
         #ame_str = decode_int_filename(name)
 
-        img = np.asarray(imageio.imread(get_img_path_2(name_str, self.voc12_root)))
+        img = np.asarray(imageio.imread(get_img_path_2(name_str, self.voc12_root,image_folder)))
 
         if self.resize_long:
             img = imutils.random_resize_long(img, self.resize_long[0], self.resize_long[1])
@@ -193,7 +193,7 @@ class VOC12ClassificationDatasetMSF(VOC12ClassificationDataset):
         name = self.img_name_list[idx]
         name_str = decode_int_filename(name)
 
-        img = imageio.imread(get_img_path_2(name_str, self.voc12_root))
+        img = imageio.imread(get_img_path_2(name_str, self.voc12_root,image_folder))
 
         ms_img_list = []
         for s in self.scales:
