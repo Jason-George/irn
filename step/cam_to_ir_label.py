@@ -43,7 +43,7 @@ def _work(process_id, infer_dataset, args):
         imageio.imwrite(os.path.join(args.ir_label_out_dir, img_name + '.png'),
                         conf.astype(np.uint8))
 
-
+        #os.remove(os.path.join(args.cam_out_dir, img_name + '.npy'))
         if process_id == args.num_workers - 1 and iter % (len(databin) // 20) == 0:
             print("%d " % ((5 * iter + 1) // (len(databin) // 20)), end='')
 
