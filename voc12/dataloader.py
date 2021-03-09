@@ -257,7 +257,7 @@ class VOC12SegmentationDataset(Dataset):
 
         img = imutils.HWC_to_CHW(img)
 
-        return {'name': name, 'img': img, 'label': label}
+        return {'name': name_str, 'img': img, 'label': label}
 
 class VOC12AffinityDataset(VOC12SegmentationDataset):
     def __init__(self, img_name_list_path, label_dir, crop_size, voc12_root,
