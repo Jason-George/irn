@@ -164,6 +164,7 @@ def run(args):
 
     dataset = voc12.dataloader.VOC12ClassificationDatasetMSF(args.infer_list,
                                                              voc12_root=args.voc12_root,
+                                                             image_folder= args.image_folder,
                                                              scales=(1.0,))
     dataset = torchutils.split_dataset(dataset, n_gpus)
 
