@@ -107,34 +107,3 @@ if __name__ == '__main__':
 
         timer = pyutils.Timer('step.cam_to_ir_label:')
         step.cam_to_ir_label.run(args)
-
-    if args.train_irn_pass is True:
-        import step.train_irn
-
-        timer = pyutils.Timer('step.train_irn:')
-        step.train_irn.run(args)
-
-    if args.make_ins_seg_pass is True:
-        import step.make_ins_seg_labels
-
-        timer = pyutils.Timer('step.make_ins_seg_labels:')
-        step.make_ins_seg_labels.run(args)
-
-    if args.eval_ins_seg_pass is True:
-        import step.eval_ins_seg
-
-        timer = pyutils.Timer('step.eval_ins_seg:')
-        step.eval_ins_seg.run(args)
-
-    if args.make_sem_seg_pass is True:
-        import step.make_sem_seg_labels
-
-        timer = pyutils.Timer('step.make_sem_seg_labels:')
-        step.make_sem_seg_labels.run(args)
-
-    if args.eval_sem_seg_pass is True:
-        import step.eval_sem_seg
-
-        timer = pyutils.Timer('step.eval_sem_seg:')
-        step.eval_sem_seg.run(args)
-
