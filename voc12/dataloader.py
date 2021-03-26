@@ -219,8 +219,14 @@ class VOC12ClassificationDatasetMSF(VOC12ClassificationDataset):
     def __getitem__(self, idx):
         name_str = self.img_name_list[idx]
         #name_str = decode_int_filename(name)
+        if self.image_folder.split('/')[1] == 'kaggle':
+            paths_imgs = glob.glob('{}/{}*.png'.format(self.image_folder,name_str))
+            img = combine_imgs(paths_imgs)
+        else:
+            img = np.asarray(imageio.imread(get_img_path_2(name_str,
+                                                           self.voc12_root,self.image_folder)))
 
-        img = imageio.imread(get_img_path_2(name_str, self.voc12_root,self.image_folder))
+        #img = imageio.imread(get_img_path_2(name_str, self.voc12_root,self.image_folder))
 
         ms_img_list = []
         for s in self.scales:
