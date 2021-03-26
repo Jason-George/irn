@@ -65,7 +65,27 @@ def load_img_name_list(dataset_path):
     img_name_list = np.loadtxt(dataset_path, dtype=np.str)
 
     return img_name_list
-
+def combine_imgs(id_imgs):
+    
+    flag = cv2.IMREAD_GRAYSCALE
+    for i in range(len(id_imgs)):
+        color = id_imgs[i].split('_')[1].split('.')[0]
+        if color == 'red':
+            rr = Image.open(id_imgs[i]).convert('RGB')
+        elif color == 'green':
+            g = cv2.imread(id_imgs[i],flag)
+            #g_resized = np.expand_dims(cv2.resize(ggg, (res, res))[:,:,0],axis=-1)
+        elif color == 'blue':
+            b = cv2.imread(id_imgs[i],flag)
+            #b_resized = np.expand_dims(cv2.resize(bbb, (res, res))[:,:,0],axis=-1)
+        elif color == 'yellow':
+            yy = Image.open(id_imgs[i]).convert('RGB')
+    if len(id_imgs)==4:
+        blend_ry = np.array(Image.blend(rr,yy,alpha=0.25))[:,:,0]
+        #img = np.concatenate([blend_ry,ggg,bbb],axis=-1)
+    image = np.stack((blend_ry,g,b),axis=-1)
+    image = np.asarray(Image.fromarray(image).resize((768,768),Image.BICUBIC))
+    return image
 
 class TorchvisionNormalize():
     def __init__(self, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
@@ -137,7 +157,14 @@ class VOC12ImageDataset(Dataset):
         name_str  = self.img_name_list[idx]
         #ame_str = decode_int_filename(name)
 
-        img = np.asarray(imageio.imread(get_img_path_2(name_str, self.voc12_root,self.image_folder)))
+        
+        if self.image_folder.split('/')[1] == 'kaggle':
+            paths_imgs = glob.glob('{}/{}*.png'.format(self.image_folder,name_str))
+            img = combine_imgs(paths_imgs)
+        else:
+            img = np.asarray(imageio.imread(get_img_path_2(name_str,
+                                                           self.voc12_root,self.image_folder)))
+        #img = np.asarray(imageio.imread(get_img_path_2(name_str, self.voc12_root,self.image_folder)))
 
         if self.resize_long:
             img = imutils.random_resize_long(img, self.resize_long[0], self.resize_long[1])
