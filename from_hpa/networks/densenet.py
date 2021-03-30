@@ -1,7 +1,8 @@
 import re
 
-from layers.backbone.densenet import *
-from layers.loss import *
+from from_hpa.layers.backbone.densenet import *
+from from_hpa.layers.loss import *
+from from_hpa.utils import torchutils
 
 
 ## networks  ######################################################################
@@ -23,7 +24,7 @@ class DensenetClass(nn.Module):
                 del state_dict[key]
         self.backbone.load_state_dict(state_dict)
 
-    def __init__(self,feature_net='densenet121', num_classes=28,
+    def __init__(self,feature_net='densenet121', num_classes=19,
                  in_channels=3,
                  pretrained_file=None,
                  dropout=False,
@@ -33,6 +34,7 @@ class DensenetClass(nn.Module):
         self.dropout = dropout
         self.in_channels = in_channels
         self.large = large
+        self.num_classes = num_classes
 
         if feature_net=='densenet121':
             self.backbone = densenet121()
@@ -72,9 +74,10 @@ class DensenetClass(nn.Module):
         self.encoder5 = nn.Sequential(self.backbone.features.transition3,
                                       self.backbone.features.denseblock4,
                                       self.backbone.features.norm5)
-        self.avgpool = nn.AdaptiveAvgPool2d(1)
-        self.maxpool = nn.MaxPool2d(2, stride=2)
-        self.logit = nn.Linear(num_features, num_classes)
+        #self.avgpool = nn.AdaptiveAvgPool2d(1)
+        #self.maxpool = nn.MaxPool2d(2, stride=2)
+        #self.logit = nn.Linear(num_features, num_classes)
+        self.classifier = nn.Conv2d(1024,self.num_classes,1,bias=False)
 
         # https://www.kaggle.com/iafoss/pretrained-resnet34-with-rgby-0-460-public-lb
         if self.dropout:
@@ -95,22 +98,12 @@ class DensenetClass(nn.Module):
         e2 = self.encoder2(x)
         e3 = self.encoder3(e2)
         e4 = self.encoder4(e3)
-        e5 = self.encoder5(e4)
+        x = self.encoder5(e4)
         # print(e2.shape, e3.shape, e4.shape, e5.shape)
-        e5 = F.relu(e5,inplace=True)
-        if self.dropout:
-            x = torch.cat((nn.AdaptiveAvgPool2d(1)(e5), nn.AdaptiveMaxPool2d(1)(e5)), dim=1)
-            x = x.view(x.size(0), -1)
-            x = self.bn1(x)
-            x = F.dropout(x, p=0.5, training=self.training)
-            x = self.fc1(x)
-            x = self.relu(x)
-            x = self.bn2(x)
-            x = F.dropout(x, p=0.5, training=self.training)
-        else:
-            x = self.avgpool(e5)
-        x = x.view(x.size(0), -1)
-        x = self.logit(x)
+        x =torchutils.gap2d(x,keepdims=True)
+        x = self.classifier(x)
+        x = x.view(-1,19)
+       
         return x
 
 def class_densenet121_dropout(**kwargs):
