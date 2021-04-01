@@ -105,5 +105,6 @@ def save_checkpoint(args, state, is_best, filename='checkpoint.pth.tar'):
     if is_best:
         shutil.copyfile(savepath, os.path.join(args.snapshot_dir, 'model_best.pth.tar'))
      #save to google Bucket
-    google_cloud.upload_blob('hpa_1',save_path,'irn/checkpoints/')
+    dest_path = 'irn/checkpoints/' + filename
+    google_cloud.upload_blob('hpa_1',save_path,dest_path)
     
