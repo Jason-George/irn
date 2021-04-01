@@ -56,7 +56,8 @@ if __name__ == '__main__':
 
     # Output Path
     parser.add_argument("--log_name", default="sample_train_eval", type=str)
-     parser.add_argument("--checkpoint_dir", default="sess/checkpoint", type=str)
+    parser.add_argument("--checkpoint_dir", default="sess/checkpoint", type=str)
+    parser.add_argument("--checkpoint_filename", default=" ", type=str)
     parser.add_argument("--cam_weights_name", default="sess/res50_cam.pth", type=str)
     parser.add_argument("--irn_weights_name", default="sess/res50_irn.pth", type=str)
     parser.add_argument("--cam_out_dir", default="result/cam", type=str)
