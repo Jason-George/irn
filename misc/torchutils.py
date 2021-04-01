@@ -2,6 +2,7 @@
 import torch
 
 from torch.utils.data import Subset
+from misc import google_cloud
 import numpy as np
 import math
 import shutil
@@ -103,3 +104,6 @@ def save_checkpoint(args, state, is_best, filename='checkpoint.pth.tar'):
     torch.save(state, savepath)
     if is_best:
         shutil.copyfile(savepath, os.path.join(args.snapshot_dir, 'model_best.pth.tar'))
+     #save to google Bucket
+    google_cloud.upload_blob('hpa_1',save_path,'irn/checkpoints/')
+    
