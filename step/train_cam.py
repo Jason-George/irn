@@ -1,5 +1,6 @@
 
 import torch
+from torch.utils.tensorboard import SummaryWriter
 from torch.backends import cudnn
 cudnn.enabled = True
 from torch.utils.data import DataLoader
@@ -39,6 +40,8 @@ def validate(model, data_loader):
 def run(args):
 
     model = getattr(importlib.import_module(args.cam_network), 'Net')()
+    
+    writer = SummaryWriter()
 
 
     train_dataset = voc12.dataloader.VOC12ClassificationDataset(args.train_list, voc12_root=args.voc12_root,image_folder=args.image_folder,
@@ -58,6 +61,10 @@ def run(args):
         {'params': param_groups[0], 'lr': args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
         {'params': param_groups[1], 'lr': 10*args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
     ], lr=args.cam_learning_rate, weight_decay=args.cam_weight_decay, max_step=max_step)
+    
+    if args.load_from_checkpoint:
+        model, optimizer = torchutils.load_checkpoint(args,model, optimizer)
+        
 
     model = torch.nn.DataParallel(model).cuda()
     model.train()
@@ -69,6 +76,16 @@ def run(args):
     for ep in range(args.cam_num_epoches):
 
         print('Epoch %d/%d' % (ep+1, args.cam_num_epoches))
+        if ep>0:
+            torchutils.save_checkpoint(args,
+                        {
+                            'epoch': ep,
+                            'state_dict':model.state_dict(),
+                            'optimizer':optimizer.state_dict()
+                            'loss': loss
+                        }, is_best=False,
+                        filename='%s_epoch_%d.pth' %('train_cam', ep))
+            
 
         for step, pack in enumerate(train_data_loader):
 
@@ -80,6 +97,8 @@ def run(args):
 
             avg_meter.add({'loss1': loss.item()})
 
+            #writer.add_scalar("Loss/train", loss, ep)
+            
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
