@@ -76,15 +76,6 @@ def run(args):
     for ep in range(args.cam_num_epoches):
 
         print('Epoch %d/%d' % (ep+1, args.cam_num_epoches))
-        if ep>0:
-            torchutils.save_checkpoint(args,
-                        {
-                            'epoch': ep,
-                            'state_dict':model.state_dict(),
-                            'optimizer':optimizer.state_dict(),
-                            'loss': loss
-                        }, is_best=False,
-                        filename='%s_epoch_%d.pth' %('train_cam', ep))
             
 
         for step, pack in enumerate(train_data_loader):
@@ -115,6 +106,14 @@ def run(args):
         else:
             validate(model, val_data_loader)
             timer.reset_stage()
+            torchutils.save_checkpoint(args,
+                        {
+                            'epoch': ep,
+                            'state_dict':model.state_dict(),
+                            'optimizer':optimizer.state_dict(),
+                            'loss': loss
+                        }, is_best=False,
+                        filename='%s_epoch_%d.pth' %('train_cam', ep))
 
     torch.save(model.module.state_dict(), args.cam_weights_name + '.pth')
     torch.cuda.empty_cache()
