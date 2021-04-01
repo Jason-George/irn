@@ -77,7 +77,7 @@ def gap2d(x, keepdims=False):
 
     return out
 
-def load_checkpoint(model, optimizer):
+def load_checkpoint(args,model, optimizer):
     # Note: Input model & optimizer should be pre-defined.  This routine only updates their states.
     filename=os.path.join(args.checkpoint_dir,args.checkpoint_filename)
     start_epoch = 0
