@@ -63,9 +63,8 @@ def run(args):
     ], lr=args.cam_learning_rate, weight_decay=args.cam_weight_decay, max_step=max_step)
     
     
-        
-
     model = torch.nn.DataParallel(model).cuda()
+    
     if args.load_from_checkpoint:
         model, optimizer,epoch,loss, = torchutils.load_checkpoint(args,model, optimizer)
         args.cam_num_epoches -= epoch 
