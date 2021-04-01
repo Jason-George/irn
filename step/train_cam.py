@@ -64,6 +64,7 @@ def run(args):
     
     if args.load_from_checkpoint:
         model, optimizer,epoch,loss, = torchutils.load_checkpoint(args,model, optimizer)
+        args.cam_num_epoches -= epoch 
         
 
     model = torch.nn.DataParallel(model).cuda()
