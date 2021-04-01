@@ -4,6 +4,8 @@ import torch
 from torch.utils.data import Subset
 import numpy as np
 import math
+import shutil
+import os
 
 
 class PolyOptimizer(torch.optim.SGD):
@@ -82,12 +84,20 @@ def load_checkpoint(model, optimizer, filename='checkpoint.pth.tar'):
         print("=> loading checkpoint '{}'".format(filename))
         checkpoint = torch.load(filename)
         start_epoch = checkpoint['epoch']
+        loss = checkpoint['loss']
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer'])
         #losslogger = checkpoint['losslogger']
+        
         print("=> loaded checkpoint '{}' (epoch {})"
                   .format(filename, checkpoint['epoch']))
     else:
         print("=> no checkpoint found at '{}'".format(filename))
 
-    return model, optimizer
+    return model, optimizer,start_epoch,loss
+
+def save_checkpoint(args, state, is_best, filename='checkpoint.pth.tar'):
+    savepath = os.path.join(args.checkpoint_dir, filename)
+    torch.save(state, savepath)
+    if is_best:
+        shutil.copyfile(savepath, os.path.join(args.snapshot_dir, 'model_best.pth.tar'))
