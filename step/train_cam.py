@@ -62,12 +62,14 @@ def run(args):
         {'params': param_groups[1], 'lr': 10*args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
     ], lr=args.cam_learning_rate, weight_decay=args.cam_weight_decay, max_step=max_step)
     
+    
+        
+
+    model = torch.nn.DataParallel(model).cuda()
     if args.load_from_checkpoint:
         model, optimizer,epoch,loss, = torchutils.load_checkpoint(args,model, optimizer)
         args.cam_num_epoches -= epoch 
         
-
-    model = torch.nn.DataParallel(model).cuda()
     model.train()
 
     avg_meter = pyutils.AverageMeter()
