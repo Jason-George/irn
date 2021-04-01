@@ -112,7 +112,7 @@ def run(args):
             torchutils.save_checkpoint(args,
                         {
                             'epoch': ep,
-                            'state_dict':model.module.state_dict(),
+                            'state_dict':model.state_dict(),
                             'optimizer':optimizer.state_dict(),
                             'loss': loss
                         }, is_best=False,
