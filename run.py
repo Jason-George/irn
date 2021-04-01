@@ -56,6 +56,7 @@ if __name__ == '__main__':
 
     # Output Path
     parser.add_argument("--log_name", default="sample_train_eval", type=str)
+     parser.add_argument("--checkpoint_dir", default="sess/checkpoint", type=str)
     parser.add_argument("--cam_weights_name", default="sess/res50_cam.pth", type=str)
     parser.add_argument("--irn_weights_name", default="sess/res50_irn.pth", type=str)
     parser.add_argument("--cam_out_dir", default="result/cam", type=str)
@@ -77,6 +78,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     os.makedirs("sess", exist_ok=True)
+    os.makedirs("sess/checkpoint", exist_ok=True)
     os.makedirs(args.cam_out_dir, exist_ok=True)
     os.makedirs(args.ir_label_out_dir, exist_ok=True)
     os.makedirs(args.sem_seg_out_dir, exist_ok=True)
