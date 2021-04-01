@@ -81,7 +81,7 @@ def run(args):
                         {
                             'epoch': ep,
                             'state_dict':model.state_dict(),
-                            'optimizer':optimizer.state_dict()
+                            'optimizer':optimizer.state_dict(),
                             'loss': loss
                         }, is_best=False,
                         filename='%s_epoch_%d.pth' %('train_cam', ep))
