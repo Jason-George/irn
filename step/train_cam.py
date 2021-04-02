@@ -75,7 +75,7 @@ def run(args):
 
     timer = pyutils.Timer()
 
-    for ep in range(args.cam_num_epoches):
+    for ep in range(epoch+1,args.cam_num_epoches):
 
         print('Epoch %d/%d' % (ep+1, args.cam_num_epoches))
             
