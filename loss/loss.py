@@ -1,9 +1,11 @@
 import math
 
 from torch import nn
-from config.config import *
+#from config.config import *
 from layers.hard_example import *
 from layers.lovasz_losses import *
+
+NUM_CLASSES = 19
 
 class FocalLoss(nn.Module):
     def __init__(self, gamma=2):
