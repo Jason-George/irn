@@ -68,9 +68,11 @@ def run(args):
     
     model = torch.nn.DataParallel(model).cuda()
     
+    epoch = 0 
     if args.load_from_checkpoint:
         model, optimizer,epoch,loss, = torchutils.load_checkpoint(args,model, optimizer)
-        args.cam_num_epoches -= (epoch+1) 
+        args.cam_num_epoches -= (epoch+1)
+        epoch +=1
         
     model.train()
 
@@ -78,7 +80,7 @@ def run(args):
 
     timer = pyutils.Timer()
 
-    for ep in range(epoch+1,args.cam_num_epoches):
+    for ep in range(epoch,args.cam_num_epoches):
 
         print('Epoch %d/%d' % (ep+1, args.cam_num_epoches))
             
