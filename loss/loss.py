@@ -2,8 +2,8 @@ import math
 
 from torch import nn
 #from config.config import *
-from layers.hard_example import *
-from layers.lovasz_losses import *
+from loss.hard_example import *
+from loss.lovasz_losses import *
 
 NUM_CLASSES = 19
 
