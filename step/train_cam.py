@@ -42,6 +42,8 @@ def run(args):
 
     model = getattr(importlib.import_module(args.cam_network), 'Net')()
     
+    criterion = eval(FocalSymmetricLovaszHardLogLoss)().cuda()
+    
     writer = SummaryWriter()
 
 
@@ -87,7 +89,8 @@ def run(args):
             label = pack['label'].cuda(non_blocking=True)
 
             x = model(img)
-            loss = F.multilabel_soft_margin_loss(x, label)
+            #loss = F.multilabel_soft_margin_loss(x, label)
+            loss = criterion(x, label, epoch=ep)
 
             avg_meter.add({'loss1': loss.item()})
 
