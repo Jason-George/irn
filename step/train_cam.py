@@ -42,7 +42,7 @@ def run(args):
 
     model = getattr(importlib.import_module(args.cam_network), 'Net')()
     
-    criterion = eval(FocalSymmetricLovaszHardLogLoss)().cuda()
+    criterion = eval('FocalSymmetricLovaszHardLogLoss')().cuda()
     
     writer = SummaryWriter()
 
