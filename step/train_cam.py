@@ -108,8 +108,9 @@ def run(args):
             loss.backward()
             optimizer.step()
 
-            if (optimizer.global_step-1)%100 == 0:
-                timer.update_progress(optimizer.global_step / max_step)
+            #if (optimizer.global_step-1)%100 == 0:
+             #   timer.update_progress(optimizer.global_step / max_step)
+              if step%100==0:
 
                 print('step:%5d/%5d' % (optimizer.global_step - 1, max_step),
                       'loss:%.4f' % (avg_meter.pop('loss1')),
