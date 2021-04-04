@@ -6,6 +6,7 @@ cudnn.enabled = True
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
 from loss.loss import * 
+from loss.scheduler import *
 
 import importlib
 
@@ -43,6 +44,7 @@ def run(args):
     model = getattr(importlib.import_module(args.cam_network), 'Net')()
     
     criterion = eval('FocalSymmetricLovaszHardLogLoss')().cuda()
+    scheduler = eval('Adam45')()
     
     writer = SummaryWriter()
 
@@ -60,10 +62,13 @@ def run(args):
                                  shuffle=False, num_workers=args.num_workers, pin_memory=True, drop_last=True)
 
     param_groups = model.trainable_parameters()
-    optimizer = torchutils.PolyOptimizer([
-        {'params': param_groups[0], 'lr': args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
-        {'params': param_groups[1], 'lr': 10*args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
-    ], lr=args.cam_learning_rate, weight_decay=args.cam_weight_decay, max_step=max_step)
+    
+    optimizer = scheduler.schedule(model, start_epoch, args.cam_num_epoches)[0]
+    
+   # optimizer = torchutils.PolyOptimizer([
+    #    {'params': param_groups[0], 'lr': args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
+     #   {'params': param_groups[1], 'lr': 10*args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
+    #], lr=args.cam_learning_rate, weight_decay=args.cam_weight_decay, max_step=max_step)
     
     
     model = torch.nn.DataParallel(model).cuda()
