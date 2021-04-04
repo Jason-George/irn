@@ -1,5 +1,5 @@
 import torch.optim as optim
-from layers.scheduler_base import SchedulerBase
+from loss.scheduler_base import SchedulerBase
 
 class Adam45(SchedulerBase):
     def __init__(self, params_list=None):
