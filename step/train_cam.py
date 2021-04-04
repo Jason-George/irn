@@ -63,7 +63,7 @@ def run(args):
 
     param_groups = model.trainable_parameters()
     
-    optimizer = scheduler.schedule(model, start_epoch, args.cam_num_epoches)[0]
+    optimizer = scheduler.schedule(model, start_epoch=0, args.cam_num_epoches)[0]
     
    # optimizer = torchutils.PolyOptimizer([
     #    {'params': param_groups[0], 'lr': args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
