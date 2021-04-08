@@ -43,8 +43,8 @@ def run(args):
 
     model = getattr(importlib.import_module(args.cam_network), 'Net')()
     
-    criterion = eval('FocalSymmetricLovaszHardLogLoss')().cuda()
-    scheduler = eval('Adam45')()
+    #criterion = eval('FocalSymmetricLovaszHardLogLoss')().cuda()
+    #scheduler = eval('Adam45')()
     
     writer = SummaryWriter()
 
@@ -66,10 +66,10 @@ def run(args):
     start_epoch = 0
     optimizer = scheduler.schedule(model, start_epoch, args.cam_num_epoches)[0]
     
-   # optimizer = torchutils.PolyOptimizer([
-    #    {'params': param_groups[0], 'lr': args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
-     #   {'params': param_groups[1], 'lr': 10*args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
-    #], lr=args.cam_learning_rate, weight_decay=args.cam_weight_decay, max_step=max_step)
+    optimizer = torchutils.PolyOptimizer([
+        {'params': param_groups[0], 'lr': args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
+        {'params': param_groups[1], 'lr': 10*args.cam_learning_rate, 'weight_decay': args.cam_weight_decay},
+    ], lr=args.cam_learning_rate, weight_decay=args.cam_weight_decay, max_step=max_step)
     
     
     model = torch.nn.DataParallel(model).cuda()
@@ -97,8 +97,8 @@ def run(args):
             label = pack['label'].cuda(non_blocking=True)
 
             x = model(img)
-            #loss = F.multilabel_soft_margin_loss(x, label)
-            loss = criterion(x, label, epoch=ep)
+            loss = F.multilabel_soft_margin_loss(x, label)
+            #loss = criterion(x, label, epoch=ep)
 
             avg_meter.add({'loss1': loss.item()})
 
@@ -108,13 +108,12 @@ def run(args):
             loss.backward()
             optimizer.step()
 
-            #if (optimizer.global_step-1)%100 == 0:
-             #   timer.update_progress(optimizer.global_step / max_step)
-            if step%100==0:
+            if (optimizer.global_step-1)%100 == 0:
+                timer.update_progress(optimizer.global_step / max_step)
                 
 
-                #print('step:%5d/%5d' % (optimizer.global_step - 1, max_step),
-                print('loss:%.4f' % (avg_meter.pop('loss1')),
+                print('step:%5d/%5d' % (optimizer.global_step - 1, max_step),
+                      'loss:%.4f' % (avg_meter.pop('loss1')),
                       'imps:%.1f' % ((step + 1) * args.cam_batch_size / timer.get_stage_elapsed()),
                       'lr: %.4f' % (optimizer.param_groups[0]['lr']),
                       'etc:%s' % (timer.str_estimated_complete()), flush=True)
