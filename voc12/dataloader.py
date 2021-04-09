@@ -162,12 +162,12 @@ class VOC12ImageDataset(Dataset):
         #ame_str = decode_int_filename(name)
 
         
-        if self.image_folder.split('/')[1] == 'kaggle':
-            paths_imgs = glob.glob('{}/{}*.png'.format(self.image_folder,name_str))
-            img = combine_imgs(paths_imgs)
-        else:
-            img = np.asarray(imageio.imread(get_img_path_2(name_str,
-                                                           self.voc12_root,self.image_folder)))
+        #if self.image_folder.split('/')[1] == 'kaggle':
+        paths_imgs = glob.glob('{}/{}*.png'.format(self.image_folder,name_str))
+        img = combine_imgs(paths_imgs)
+        #else:
+         #   img = np.asarray(imageio.imread(get_img_path_2(name_str,
+          #                                                 self.voc12_root,self.image_folder)))
         #img = np.asarray(imageio.imread(get_img_path_2(name_str, self.voc12_root,self.image_folder)))
 
         if self.resize_long:
@@ -223,12 +223,12 @@ class VOC12ClassificationDatasetMSF(VOC12ClassificationDataset):
     def __getitem__(self, idx):
         name_str = self.img_name_list[idx]
         #name_str = decode_int_filename(name)
-        if self.image_folder.split('/')[1] == 'kaggle':
-            paths_imgs = glob.glob('{}/{}*.png'.format(self.image_folder,name_str))
-            img = combine_imgs(paths_imgs)
-        else:
-            img = np.asarray(imageio.imread(get_img_path_2(name_str,
-                                                           self.voc12_root,self.image_folder)))
+        #if self.image_folder.split('/')[1] == 'kaggle':
+        paths_imgs = glob.glob('{}/{}*.png'.format(self.image_folder,name_str))
+        img = combine_imgs(paths_imgs)
+        #else:
+         #   img = np.asarray(imageio.imread(get_img_path_2(name_str,
+          #                                                 self.voc12_root,self.image_folder)))
 
         #img = imageio.imread(get_img_path_2(name_str, self.voc12_root,self.image_folder))
 
@@ -250,12 +250,13 @@ class VOC12ClassificationDatasetMSF(VOC12ClassificationDataset):
 
 class VOC12SegmentationDataset(Dataset):
 
-    def __init__(self, img_name_list_path, label_dir, crop_size, voc12_root,
+    def __init__(self, img_name_list_path, label_dir,  voc12_root,image_folder,crop_size,
                  rescale=None, img_normal=TorchvisionNormalize(), hor_flip=False,
                  crop_method = 'random'):
 
         self.img_name_list = load_img_name_list(img_name_list_path)
         self.voc12_root = voc12_root
+        self.image_folder = image_folder
 
         self.label_dir = label_dir
 
@@ -272,10 +273,12 @@ class VOC12SegmentationDataset(Dataset):
         name_str = self.img_name_list[idx]
         #name_str = decode_int_filename(name)
 
-        img = imageio.imread(get_img_path(name_str, self.voc12_root))
+        paths_imgs = glob.glob('{}/{}*.png'.format(self.image_folder,name_str))
+        img = combine_imgs(paths_imgs)
+        #img = imageio.imread(get_img_path(name_str, self.voc12_root))
         label = imageio.imread(os.path.join(self.label_dir, name_str + '.png'))
 
-        img = np.asarray(img)
+        #img = np.asarray(img)
 
         if self.rescale:
             img, label = imutils.random_scale((img, label), scale_range=self.rescale, order=(3, 0))
@@ -297,10 +300,10 @@ class VOC12SegmentationDataset(Dataset):
         return {'name': name_str, 'img': img, 'label': label}
 
 class VOC12AffinityDataset(VOC12SegmentationDataset):
-    def __init__(self, img_name_list_path, label_dir, crop_size, voc12_root,
+    def __init__(self, img_name_list_path, label_dir, voc12_root,image_folder,crop_size,
                  indices_from, indices_to,
                  rescale=None, img_normal=TorchvisionNormalize(), hor_flip=False, crop_method=None):
-        super().__init__(img_name_list_path, label_dir, crop_size, voc12_root, rescale, img_normal, hor_flip, crop_method=crop_method)
+        super().__init__(img_name_list_path, label_dir,voc12_root,imagae_folder, crop_size, rescale, img_normal, hor_flip, crop_method=crop_method)
 
         self.extract_aff_lab_func = GetAffinityLabelFromIndices(indices_from, indices_to)
 
