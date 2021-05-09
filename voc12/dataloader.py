@@ -303,7 +303,7 @@ class VOC12AffinityDataset(VOC12SegmentationDataset):
     def __init__(self, img_name_list_path, label_dir, voc12_root,image_folder,crop_size,
                  indices_from, indices_to,
                  rescale=None, img_normal=TorchvisionNormalize(), hor_flip=False, crop_method=None):
-        super().__init__(img_name_list_path, label_dir,voc12_root,imagae_folder, crop_size, rescale, img_normal, hor_flip, crop_method=crop_method)
+        super().__init__(img_name_list_path, label_dir,voc12_root,image_folder, crop_size, rescale, img_normal, hor_flip, crop_method=crop_method)
 
         self.extract_aff_lab_func = GetAffinityLabelFromIndices(indices_from, indices_to)
 
