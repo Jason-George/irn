@@ -17,6 +17,7 @@ def run(args):
     train_dataset = voc12.dataloader.VOC12AffinityDataset(args.train_list,
                                                           label_dir=args.ir_label_out_dir,
                                                           voc12_root=args.voc12_root,
+                                                          image_folder = args.image_folder,
                                                           indices_from=path_index.src_indices,
                                                           indices_to=path_index.dst_indices,
                                                           hor_flip=True,
